@@ -1,0 +1,14 @@
+model_list:
+  - model_name: copilot-opus-1m
+    litellm_params:
+      model: github_copilot/claude-opus-4.6-1m
+  - model_name: copilot-opus
+    litellm_params:
+      model: github_copilot/claude-opus-4.6
+  - model_name: copilot-sonnet
+    litellm_params:
+      model: github_copilot/claude-sonnet-4.6
+
+litellm_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  drop_params: true
