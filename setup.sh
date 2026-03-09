@@ -5,11 +5,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "==> Creating Python virtual environment..."
-python3 -m venv .venv
+python3.13 -m venv .venv
 source .venv/bin/activate
 
-echo "==> Installing litellm[proxy]..."
-pip install --quiet 'litellm[proxy]'
+echo "==> Installing litellm[proxy] and truststore..."
+pip install --quiet 'litellm[proxy]' truststore
+
+echo "==> Injecting truststore for corporate proxy SSL support..."
+SITE_PACKAGES="$(python3 -c 'import site; print(site.getsitepackages()[0])')"
+echo "import truststore; truststore.inject_into_ssl()" > "${SITE_PACKAGES}/truststore_inject.pth"
 
 if [ ! -f .env ]; then
   KEY="sk-$(openssl rand -hex 32)"
