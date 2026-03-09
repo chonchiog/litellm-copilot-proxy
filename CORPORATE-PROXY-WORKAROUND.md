@@ -2,6 +2,28 @@
 
 This branch adds a workaround for **corporate environments** (e.g., Lockheed Martin) where a TLS-intercepting proxy causes Python SSL verification failures when LiteLLM tries to authenticate with GitHub Copilot.
 
+## ELI15 — The Simple Version
+
+Okay so imagine you're trying to text your friend (GitHub), but your school (Lockheed Martin) reads every message first. They open your texts, check them, then re-seal them with the school's own sticker before sending them out.
+
+Your phone (Python) is like "wait... this sticker isn't from my friend, it's from the school... this is SUS 🚩" and **blocks the message**. That's the SSL error.
+
+The thing is, your phone already knows the school is legit — it's saved in your contacts (macOS Keychain). But Python doesn't check your contacts. It only checks its own little list of trusted stickers (`certifi`), and the school's sticker isn't on it.
+
+**The fix:** We installed `truststore`, which basically tells Python "yo, just check the contacts list on the phone instead of your own little list." Now Python sees the school's sticker, recognizes it, and lets the messages through. ✅
+
+```
+  Before:
+  Python 🤖: "idk this sticker, BLOCKED" ❌
+
+  After (with truststore):
+  Python 🤖: "lemme check the phone's contacts..."
+  macOS 📱:  "yeah that's the school, they're cool"
+  Python 🤖: "aight bet, sending it through" ✅
+```
+
+---
+
 ## The Problem
 
 ```
